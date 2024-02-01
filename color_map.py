@@ -1,0 +1,22 @@
+COLOR_MAP = {
+    'red': ['firebrick', 'crimson', 'tomato', 'orangered', 'coral', 'salmon', 'darksalmon', 'lightsalmon', 'rubyred'],
+    'orange': ['darkorange', 'orange'],
+    'yellow': ['gold', 'yellow', 'lightyellow', 'lemonchiffon', 'lightgoldenrodyellow', 'papayawhip', 'moccasin', 'peachpuff', 'palegoldenrod', 'khaki'],
+    'green': ['lawngreen', 'chartreuse', 'limegreen', 'lime', 'forestgreen', 'green', 'darkgreen', 'greenyellow', 'yellowgreen', 'springgreen', 'mediumspringgreen', 'lightgreen', 'palegreen', 'darkseagreen', 'mediumseagreen', 'seagreen', 'olive', 'olivedrab'],
+    'blue': ['darkslateblue', 'aqua', 'cyan', 'lightcyan', 'paleturquoise', 'aquamarine', 'turquoise', 'mediumturquoise', 'darkturquoise', 'lightseagreen', 'cadetblue', 'darkcyan', 'teal', 'lightblue', 'powderblue', 'lightsteelblue', 'skyblue', 'lightskyblue', 'deepskyblue', 'dodgerblue', 'cornflowerblue', 'steelblue', 'royalblue', 'blue', 'mediumblue', 'darkblue', 'navy', 'midnightblue', 'indigo'],
+    'purple': ['lavender', 'thistle', 'plum', 'violet', 'orchid', 'fuchsia', 'magenta', 'mediumorchid', 'mediumpurple', 'blueviolet', 'darkviolet', 'darkorchid', 'darkmagenta', 'purple', 'indigo'],
+    'pink': ['pink', 'lightpink', 'hotpink', 'deeppink', 'palevioletred', 'mediumvioletred', 'indianred'],
+    'brown': ['lightsalmon', 'salmon', 'darksalmon', 'lightcoral', 'crimson', 'firebrick', 'darkred', 'red', 'snow', 'lightcoral', 'brown', 'firebrick', 'darkred', 'maroon', 'mistyrose', 'salmon', 'tomato', 'darksalmon', 'coral', 'orangered', 'lightcoral', 'sienna', 'seashell', 'chocolate', 'saddlebrown', 'sandybrown', 'peachpuff', 'peru', 'linen', 'bisque', 'darkorange', 'burlywood', 'antiquewhite', 'tan', 'navajowhite', 'blanchedalmond', 'papayawhip', 'moccasin', 'orange', 'wheat', 'oldlace', 'floralwhite', 'darkgoldenrod', 'goldenrod', 'cornsilk', 'gold', 'lemonchiffon', 'khaki', 'palegoldenrod', 'darkkhaki', 'ivory', 'beige', 'lightyellow', 'lightgoldenrodyellow', 'yellow', 'olive', 'yellowgreen', 'darkolivegreen', 'greenyellow', 'chartreuse', 'lawngreen', 'darkgreen', 'green', 'forestgreen', 'lime', 'limegreen', 'palegreen', 'lightgreen', 'mediumspringgreen', 'springgreen', 'mediumseagreen', 'seagreen', 'olivedrab', 'darkolivegreen'],
+    'black': ['gainsboro', 'lightgray', 'silver', 'darkgray', 'lightslategray', 'slategray', 'darkslategray', 'black'],
+    'white': ['white', 'snow', 'honeydew', 'mintcream', 'azure', 'aliceblue', 'ghostwhite', 'whitesmoke', 'seashell', 'beige', 'oldlace', 'floralwhite', 'ivory', 'antiquewhite', 'linen', 'lavenderblush', 'mistyrose'],
+    'gray': ['gainsboro', 'rosybrown', 'lightgray', 'silver', 'darkgray', 'gray', 'dimgray', 'lightslategray', 'slategray', 'darkslategray', 'darkkhaki'],
+    'beige': ['beige', 'bisque', 'blanchedalmond', 'wheat', 'cornsilk', 'lemonchiffon', 'lightgoldenrodyellow', 'lightyellow', 'saddlebrown', 'sienna', 'chocolate', 'peru', 'sandybrown', 'burlywood', 'tan', 'moccasin', 'navajowhite', 'peachpuff', 'palegoldenrod', 'khaki', 'darkkhaki'],
+    'turquoise': ['aqua', 'cyan', 'lightcyan', 'paleturquoise', 'aquamarine', 'turquoise', 'mediumturquoise', 'darkturquoise', 'lightseagreen', 'cadetblue', 'darkcyan', 'teal'],
+    'indigo': ['indigo', 'midnightblue', 'navy', 'darkblue', 'mediumblue', 'blue', 'royalblue', 'cornflowerblue', 'lightsteelblue', 'steelblue', 'dodgerblue', 'deepskyblue', 'lightskyblue', 'skyblue', 'lightblue', 'powderblue', 'aliceblue', 'ghostwhite'],
+    'magenta': ['fuchsia', 'magenta', 'violet', 'plum', 'orchid', 'mediumorchid', 'darkorchid', 'darkviolet', 'blueviolet', 'purple', 'mediumpurple', 'thistle'],
+    'gold': ['gold', 'yellow', 'lightyellow', 'lemonchiffon', 'lightgoldenrodyellow', 'papayawhip', 'moccasin', 'peachpuff', 'palegoldenrod', 'khaki', 'darkkhaki'],
+    'silver': ['gainsboro', 'lightgray', 'silver', 'darkgray', 'gray', 'lightslategray', 'slategray', 'darkslategray'],
+    'cupper': ['copper'],
+    'rubyred': ['rubyred'],
+    'olive': ['olive', 'darkolivegreen', 'olivedrab']
+}
