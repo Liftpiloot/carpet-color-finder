@@ -17,9 +17,10 @@ def get_colour_name(requested_colour):
     except ValueError:
         closest_name = closest_colour(requested_colour)
         actual_name = closest_name
-        print(closest_name)
     for key, values in COLOR_MAP.items():
         if closest_name in values:
             closest_name = key
             break
     return actual_name, closest_name
+
+print(get_colour_name((100, 100, 100)))
