@@ -1,5 +1,4 @@
 import shutil
-
 from rembg import remove
 import tkinter as tk
 from tkinter import filedialog
@@ -9,10 +8,12 @@ import io
 import os
 
 import color_map
-from color import get_colour_name
-from color_map import COLOR_MAP
+# from color import get_colour_name
+# from color_map import COLOR_MAP
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
+
+
+# import matplotlib.pyplot as plt
 
 
 # Let user select image file from explorer
@@ -23,9 +24,12 @@ def select_images_folder():
     folder_path = filedialog.askdirectory(title="Select folder with images to process")
     return folder_path
 
+
 def get_image_files(folder_path):
-    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if
+                   f.endswith(('.png', '.jpg', '.jpeg'))]
     return image_files
+
 
 # Let user select folder to save image file
 def select_output_folder():
@@ -34,7 +38,8 @@ def select_output_folder():
     folder_path = filedialog.askdirectory(title="Select folder to save images to")
     return folder_path
 
-#remove background from selected image
+
+# remove background from selected image
 
 def remove_bg(input_path):
     with open(input_path, "rb") as i:
@@ -42,12 +47,19 @@ def remove_bg(input_path):
         output = remove(input)
         return output
 
+
 def get_color_palette(image, n_colors):
+    """
+    Get the colour palette of an image using KMeans clustering
+    :param image: input image
+    :param n_colors: number of clusters (i.e., colours) to find
+    :return: the colour palette
+    """
     # Get the dimensions (width, height, and depth) of the image
     w, h, d = tuple(image.shape)
     # Reshape the image into a 2D array, where each row represents a pixel
     pixel = np.reshape(image, (w * h, d))
-    # If the image has an alpha channel (i.e., it's a RGBA image), remove transparent pixels
+    # If the image has an alpha channel (i.e., it's an RGBA image), remove transparent pixels
     if d == 4:
         pixel = pixel[pixel[:, 3] > 200]
     # Create a KMeans model with the specified number of clusters and fit it to the pixels
@@ -56,53 +68,41 @@ def get_color_palette(image, n_colors):
     colour_palette = np.uint8(model.cluster_centers_)
     return colour_palette
 
-def get_output_filename(image, filename, n_colors=10):
-    # Get the cluster centers (representing colors) from the model
-    colour_palette = get_color_palette(image, n_colors)
 
-    # Plot the colour palette
-    plot_pallete(colour_palette, n_colors)
-
-    # Get the color name of each cluster center
-    colour_names = []
-    for colour in colour_palette:
-        name, key_name = get_colour_name(colour[:3])
-        color = key_name
-        # append color name if it is not in the list
-        if color not in colour_names:
-            colour_names.append(color)
-    output_filename = "_".join(colour_names) + ".jpg"
-    return "col" + "_" + output_filename
-
-
-def plot_pallete(colour_palette, n_colors=10, euclidean=False):
-    # plot colour palette
-    fig, ax = plt.subplots()
-    plt.imshow([colour_palette])
-    for i, colour in enumerate(colour_palette):
-        colour_normal = colour / 255
-        ax.add_patch(plt.Rectangle((0, i), 1, 1, color=colour_normal))
-        if euclidean:
-            name = color_map.get_euc_distance(colour[:3])
-        else:
-            act_name, name = get_colour_name(colour[:3])
-        ax.text(1.2, i + 0.5, str(colour) + ": " + name + ": " + name, va='center')
-
-        # Set limits and labels
-    ax.set_xlim(0, 2)
-    ax.set_ylim(0, n_colors)
-    ax.set_axis_off()
-    plt.show()
+# Plot the colour palette with the color names
+# def plot_pallete(colour_palette, n_colors=10, euclidean=False):
+#     # plot colour palette
+#     fig, ax = plt.subplots()
+#     plt.imshow([colour_palette])
+#     for i, colour in enumerate(colour_palette):
+#         colour_normal = colour / 255
+#         ax.add_patch(plt.Rectangle((0, i), 1, 1, color=colour_normal))
+#         if euclidean:
+#             name = color_map.get_euc_distance(colour[:3])
+#         else:
+#             act_name, name = get_colour_name(colour[:3])
+#         ax.text(1.2, i + 0.5, str(colour) + ": " + name + ": " + name, va='center')
+#
+#         # Set limits and labels
+#     ax.set_xlim(0, 2)
+#     ax.set_ylim(0, n_colors)
+#     ax.set_axis_off()
+#     plt.show()
 
 
 def get_filename_euc(image, filename, n_colors=10):
+    """
+    Get the filename based on the color palette of the image
+    :param image: input    :param filename:  filename
+    :param n_colors: number of clusters (i.e., colours) to find
+    :return: filename plus color names
+    """
     # Get the cluster centers (representing colors) from the model
     colour_palette = get_color_palette(image, n_colors)
+    # Plot the colour palette (optional)
+    # plot_pallete(colour_palette, n_colors, euclidean=True)
 
-    # Plot the colour palette
-    plot_pallete(colour_palette, n_colors, euclidean=True)
-
-    # Get the color name of each cluster center
+    # Get the color name of each cluster center using the Euclidean distance
     colour_names = []
     for colour in colour_palette:
         key_name = color_map.get_euc_distance(colour[:3])
@@ -114,6 +114,7 @@ def get_filename_euc(image, filename, n_colors=10):
     return filename + "_" + output_filename
 
 
+# Display a message box to show when the process is done
 def show_done_message(store_location):
     root = tk.Tk()
     root.title("Done")
@@ -133,6 +134,11 @@ def open_selection_window():
     root.destroy()  # Destroy the root window
 
 
+# 1. Prompt the user to select the input folder
+# 2. Prompt the user to select the output folder
+# 3. Prompt the user to enter high or low
+# 4. Images are processed and saved in the output folder
+# 5. A message box is displayed to show when the process is done
 def main():
     # Let user select image folder
     images_folder = select_images_folder()
@@ -168,9 +174,9 @@ def main():
         # output_path_trans = os.path.join(output_folder, output_filename_euc + ".png")
         # image.save(output_path_trans, "PNG")
 
-
     show_done_message(output_folder)
 
 
+# Run the main function
 if __name__ == "__main__":
     main()
