@@ -22,5 +22,3 @@ def get_colour_name(requested_colour):
             closest_name = key
             break
     return actual_name, closest_name
-
-print(get_colour_name((100, 100, 100)))

@@ -1,6 +1,5 @@
 import shutil
 
-from matplotlib import colors
 from rembg import remove
 import tkinter as tk
 from tkinter import filedialog
@@ -21,7 +20,7 @@ import matplotlib.pyplot as plt
 def select_images_folder():
     root = tk.Tk()
     root.withdraw()
-    folder_path = filedialog.askdirectory(title="open image folder")
+    folder_path = filedialog.askdirectory(title="Select folder with images to process")
     return folder_path
 
 def get_image_files(folder_path):
@@ -32,7 +31,7 @@ def get_image_files(folder_path):
 def select_output_folder():
     root = tk.Tk()
     root.withdraw()
-    folder_path = filedialog.askdirectory(title="select folder to save image")
+    folder_path = filedialog.askdirectory(title="Select folder to save images to")
     return folder_path
 
 #remove background from selected image
@@ -119,7 +118,7 @@ def show_done_message(store_location):
     root = tk.Tk()
     root.title("Done")
     root.geometry("800x300")
-    label = tk.Label(root, text=f"Done with store location: {store_location}")
+    label = tk.Label(root, text=f"Done, results: {store_location}")
     label.pack()
     button = tk.Button(root, text="OK", command=root.destroy)
     button.pack()
@@ -135,14 +134,17 @@ def open_selection_window():
 
 
 def main():
+    # Let user select image folder
     images_folder = select_images_folder()
     image_files = get_image_files(images_folder)
     output_folder = select_output_folder()
+
     # open selection window
     open_selection_window()
     for i, image_file in enumerate(image_files):
-        transparent = remove_bg(image_file)
-        image = Image.open(io.BytesIO(transparent))
+        # remove background from image
+        image = remove_bg(image_file)
+        image = Image.open(io.BytesIO(image))
         image_np = np.array(image)
         filename = os.path.basename(image_file)
         # remove file extension
@@ -152,19 +154,19 @@ def main():
         # append -c~ to the end of filename
         filename = filename + "-c~"
 
-        # The hard way
-        #output_filename = get_output_filename(image_np, filename)  # Pass both rgb and alpha to get_output_filename
-        #output_path = os.path.join(output_folder ,output_filename)
-        #shutil.copy(image_file, output_path)
+        # Get color from color.py and map it to the closest color
+        # output_filename = get_output_filename(image_np, filename)  # Pass both rgb and alpha to get_output_filename
+        # output_path = os.path.join(output_folder ,output_filename)
+        # shutil.copy(image_file, output_path)
 
-        # The easy way
-        output_filename_euc = get_filename_euc(image_np, filename, n_colors=7)
+        # Calculate euclidean distance and map it to the closest color (more accurate)
+        output_filename_euc = get_filename_euc(image_np, filename, n_colors=8)
         output_path_euc = os.path.join(output_folder, output_filename_euc) + ".jpg"
-        output_path_trans = os.path.join(output_folder, output_filename_euc + ".png")
         shutil.copy(image_file, output_path_euc)
 
-        # Save transparent image
-        image.save(output_path_trans, "PNG")
+        # Save transparent image as well
+        # output_path_trans = os.path.join(output_folder, output_filename_euc + ".png")
+        # image.save(output_path_trans, "PNG")
 
 
     show_done_message(output_folder)
