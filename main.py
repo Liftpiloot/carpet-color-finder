@@ -1,4 +1,6 @@
 import shutil
+
+from matplotlib import pyplot as plt
 from rembg import remove
 import tkinter as tk
 from tkinter import filedialog
@@ -8,16 +10,10 @@ import io
 import os
 
 import color_map
-# from color import get_colour_name
-# from color_map import COLOR_MAP
 from sklearn.cluster import KMeans
 
 
-# import matplotlib.pyplot as plt
-
-
 # Let user select image file from explorer
-
 def select_images_folder():
     root = tk.Tk()
     root.withdraw()
@@ -25,6 +21,7 @@ def select_images_folder():
     return folder_path
 
 
+# Get all image files from selected folder
 def get_image_files(folder_path):
     image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if
                    f.endswith(('.png', '.jpg', '.jpeg'))]
@@ -40,7 +37,6 @@ def select_output_folder():
 
 
 # remove background from selected image
-
 def remove_bg(input_path):
     with open(input_path, "rb") as i:
         input = i.read()
@@ -70,27 +66,24 @@ def get_color_palette(image, n_colors):
 
 
 # Plot the colour palette with the color names
-# def plot_pallete(colour_palette, n_colors=10, euclidean=False):
-#     # plot colour palette
-#     fig, ax = plt.subplots()
-#     plt.imshow([colour_palette])
-#     for i, colour in enumerate(colour_palette):
-#         colour_normal = colour / 255
-#         ax.add_patch(plt.Rectangle((0, i), 1, 1, color=colour_normal))
-#         if euclidean:
-#             name = color_map.get_euc_distance(colour[:3])
-#         else:
-#             act_name, name = get_colour_name(colour[:3])
-#         ax.text(1.2, i + 0.5, str(colour) + ": " + name + ": " + name, va='center')
-#
-#         # Set limits and labels
-#     ax.set_xlim(0, 2)
-#     ax.set_ylim(0, n_colors)
-#     ax.set_axis_off()
-#     plt.show()
+def plot_pallete(colour_palette, n_colors=10):
+    # plot colour palette
+    fig, ax = plt.subplots()
+    plt.imshow([colour_palette])
+    for i, colour in enumerate(colour_palette):
+        colour_normal = colour / 255
+        ax.add_patch(plt.Rectangle((0, i), 1, 1, color=colour_normal))
+        name, distance = color_map.get_closest_color(colour[:3])
+        ax.text(1.2, i + 0.5, str(colour) + ": " + name + ": " + str(distance), va='center')
+
+        # Set limits and labels
+    ax.set_xlim(0, 2)
+    ax.set_ylim(0, n_colors)
+    ax.set_axis_off()
+    plt.show()
 
 
-def get_filename_euc(image, filename, n_colors=10):
+def get_filename_euc(image, filename, n_colors=10, min_distance=20):
     """
     Get the filename based on the color palette of the image
     :param image: input    :param filename:  filename
@@ -100,16 +93,16 @@ def get_filename_euc(image, filename, n_colors=10):
     # Get the cluster centers (representing colors) from the model
     colour_palette = get_color_palette(image, n_colors)
     # Plot the colour palette (optional)
-    # plot_pallete(colour_palette, n_colors, euclidean=True)
+    # plot_pallete(colour_palette, n_colors)
 
     # Get the color name of each cluster center using the Euclidean distance
     colour_names = []
     for colour in colour_palette:
-        key_name = color_map.get_euc_distance(colour[:3])
-        color = key_name
+        color_name, distance = color_map.get_closest_color(colour[:3])
         # append color name if it is not in the list
-        if color not in colour_names:
-            colour_names.append(color)
+        if color_name not in colour_names:
+            if distance < min_distance:
+                colour_names.append(color_name)
     output_filename = "_".join(colour_names)
     return filename + "_" + output_filename
 
@@ -126,6 +119,7 @@ def show_done_message(store_location):
     root.wait_window()
 
 
+# Prompt the user to enter high or low
 def open_selection_window():
     global high_low
     root = tk.Tk()
@@ -145,7 +139,7 @@ def main():
     image_files = get_image_files(images_folder)
     output_folder = select_output_folder()
 
-    # open selection window
+    # select high or low
     open_selection_window()
     for i, image_file in enumerate(image_files):
         # remove background from image
@@ -160,13 +154,10 @@ def main():
         # append -c~ to the end of filename
         filename = filename + "-c~"
 
-        # Get color from color.py and map it to the closest color
-        # output_filename = get_output_filename(image_np, filename)  # Pass both rgb and alpha to get_output_filename
-        # output_path = os.path.join(output_folder ,output_filename)
-        # shutil.copy(image_file, output_path)
-
-        # Calculate euclidean distance and map it to the closest color (more accurate)
-        output_filename_euc = get_filename_euc(image_np, filename, n_colors=8)
+        # Calculate euclidean distance and map it to the closest color (more accurate). n_colors is the number of
+        # clusters, min_distance is the minimum distance to be considered as a color, play around with these values
+        # to get the best result
+        output_filename_euc = get_filename_euc(image_np, filename, n_colors=17, min_distance=30)
         output_path_euc = os.path.join(output_folder, output_filename_euc) + ".jpg"
         shutil.copy(image_file, output_path_euc)
 
